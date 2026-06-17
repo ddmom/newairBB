@@ -138,6 +138,22 @@
     .map-note{position:absolute;left:28px;bottom:28px;max-width:310px;padding:18px 20px;border-radius:22px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:rgba(255,255,255,.78);line-height:1.65;font-size:.95rem;box-shadow:0 14px 35px rgba(0,0,0,.22);}
     .map-note strong{display:block;color:#fff;font-size:1.05rem;margin-bottom:4px;}
     .map-line{position:absolute;inset:0;opacity:.68;pointer-events:none;}.map-line svg{width:100%;height:100%;}.map-line path{fill:none;stroke:rgba(255,209,102,.58);stroke-width:2;stroke-dasharray:8 12;animation:routeMove 8s linear infinite;}
+
+    /* AIRBNB TOUR COACH: travels the fan route between hotspots */
+    .bus-layer{position:absolute;inset:0;z-index:2;pointer-events:none;}
+    .bus-layer svg{width:100%;height:100%;}
+    .bus-glow{fill:rgba(255,209,102,.38);filter:blur(.6px);animation:busGlow 1.6s ease-in-out infinite;}
+    .bus-roof,.bus-body{fill:#f6f2ea;}
+    .bus-window-band{fill:rgba(13,11,16,.58);}
+    .bus-stripe{fill:var(--airbnb);}
+    .bus-badge-bg{fill:#ffffff;}
+    .bus-badge-mark{fill:var(--airbnb);font-weight:950;}
+    .bus-wheel{fill:var(--dark);}
+    .bus-wheel-rim{fill:#d8d4cb;}
+    .bus-shape{filter:drop-shadow(0 1px 4px rgba(0,0,0,.45));}
+    .shuttle-chip{position:absolute;right:28px;top:26px;z-index:3;display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:.82rem;font-weight:900;color:var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.25);}
+    .shuttle-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--airbnb);box-shadow:0 0 10px rgba(255,56,92,.85);animation:busGlow 1.6s ease-in-out infinite;}
+
     .hotspot{position:absolute;transform:translate(-50%,-50%);border:0;background:transparent;color:#fff;display:flex;align-items:center;gap:10px;cursor:pointer;isolation:isolate;}
     .hotspot .pin{width:36px;height:36px;border-radius:50% 50% 50% 8px;transform:rotate(-45deg);display:grid;place-items:center;background:var(--airbnb);box-shadow:0 0 0 8px rgba(255,56,92,.13), 0 0 34px rgba(255,56,92,.65);}
     .hotspot .pin::before{content:"";width:12px;height:12px;border-radius:50%;background:#fff;display:block;}
@@ -168,9 +184,10 @@
     @keyframes trailFade{from{opacity:.8;transform:translate(-50%,-50%) scale(1);}to{opacity:0;transform:translate(-50%,-50%) scale(.2);}}
     @keyframes hotspotPulse{0%{opacity:.8;transform:translate(-50%,-50%) scale(.75);}100%{opacity:0;transform:translate(-50%,-50%) scale(2.05);}}
     @keyframes routeMove{to{stroke-dashoffset:-160;}}
+    @keyframes busGlow{0%,100%{opacity:.5;}50%{opacity:1;}}
 
     @media(max-width:980px){.nav{left:6vw;right:6vw;padding:12px 14px;}.logo{font-size:1.15rem;}.nav-links{display:none;}.hero-badge{display:none;}.hero-content{padding-top:130px;}.route-grid{grid-template-columns:1fr;}.map-box{min-height:420px;}.benefit-layout{grid-template-columns:1fr;}.impact-bento-wrap{grid-template-columns:1fr;}.seoul-map-panel{min-height:520px;}section{padding:82px 6vw;}.cta-box{padding:46px 28px;}}
-    @media(max-width:560px){.hero{padding:28px 6vw 56px;}h1{font-size:3.6rem;}.buttons{flex-direction:column;}.btn{width:100%;}.benefit-bento{grid-template-columns:1fr;}.benefit-tile:first-child{grid-column:span 1;}.benefit-detail{min-height:560px;}.detail-card{padding:30px 26px;}.detail-icon{font-size:5rem;}.impact-bento-grid{grid-template-columns:1fr;}.bento-card.featured,.impact-summary{grid-column:span 1;}.hotspot .label{font-size:.84rem;padding:8px 10px;}.seoul-map-panel{min-height:460px;}footer{flex-direction:column;text-align:center;}.scroll-controls{right:12px;}.scroll-btn{width:40px;height:40px;font-size:1rem;}}
+    @media(max-width:560px){.hero{padding:28px 6vw 56px;}h1{font-size:3.6rem;}.buttons{flex-direction:column;}.btn{width:100%;}.benefit-bento{grid-template-columns:1fr;}.benefit-tile:first-child{grid-column:span 1;}.benefit-detail{min-height:560px;}.detail-card{padding:30px 26px;}.detail-icon{font-size:5rem;}.impact-bento-grid{grid-template-columns:1fr;}.bento-card.featured,.impact-summary{grid-column:span 1;}.hotspot .label{font-size:.84rem;padding:8px 10px;}.seoul-map-panel{min-height:460px;}.shuttle-chip{right:18px;top:18px;font-size:.74rem;padding:8px 12px;}footer{flex-direction:column;text-align:center;}.scroll-controls{right:12px;}.scroll-btn{width:40px;height:40px;font-size:1rem;}}
   </style>
 </head>
 <body>
@@ -284,23 +301,50 @@
     <div class="section-title reveal">
       <div class="eyebrow">SEOUL FAN IMPACT MAP</div>
       <h2>Bento + Glass로 보여주는<br>서울 팬 여행 임팩트</h2>
-      <p>서울 지도 위 지역을 클릭하면 오른쪽 Bento 카드가 함께 반응하며, 팬 동선과 지역상생 효과를 한눈에 보여줍니다.</p>
+      <p>익선동 → 홍대 → 성수 → 잠실을 잇는 에어비앤비 관광버스 동선을 따라가며 지도 위 지역을 클릭하면 오른쪽 Bento 카드가 함께 반응하고, 팬 동선과 지역상생 효과를 한눈에 보여줍니다.</p>
     </div>
     <div class="impact-bento-wrap reveal">
       <div class="seoul-map-panel" aria-label="서울 팬 임팩트 지도">
-        <div class="map-line" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M35 48 C45 38, 52 30, 62 39 S70 52, 75 58" /><path d="M53 29 C45 36, 40 42, 35 48" /></svg></div>
+        <div class="map-line" aria-hidden="true">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M53 29 C45 36, 40 42, 35 48 C45 38, 52 30, 62 39 S70 52, 75 58" />
+          </svg>
+        </div>
+        <div class="bus-layer" aria-hidden="true">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <g class="bus-marker">
+              <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear"
+                keyPoints="0;1;0" keyTimes="0;0.5;1"
+                path="M53 29 C45 36, 40 42, 35 48 C45 38, 52 30, 62 39 S70 52, 75 58" />
+              <circle class="bus-glow" r="5.2" />
+              <g class="bus-shape">
+                <rect class="bus-roof" x="-4.4" y="-2.6" width="8.8" height="1.3" rx="0.65" />
+                <rect class="bus-body" x="-4.6" y="-1.5" width="9.2" height="3.7" rx="1" />
+                <rect class="bus-window-band" x="-3.95" y="-1.9" width="8" height="1.45" rx="0.45" />
+                <rect class="bus-stripe" x="-4.6" y="0.55" width="9.2" height="0.55" />
+                <circle class="bus-badge-bg" cx="2.55" cy="-0.45" r="0.95" />
+                <text class="bus-badge-mark" x="2.55" y="-0.08" text-anchor="middle" font-size="1.1">A</text>
+                <circle class="bus-wheel" cx="-2.7" cy="2.25" r="0.85" />
+                <circle class="bus-wheel" cx="2.7" cy="2.25" r="0.85" />
+                <circle class="bus-wheel-rim" cx="-2.7" cy="2.25" r="0.32" />
+                <circle class="bus-wheel-rim" cx="2.7" cy="2.25" r="0.32" />
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="shuttle-chip"><span class="dot"></span>에어비앤비 관광버스 운행 중</div>
         <button class="hotspot seongsu active" data-impact="seongsu" type="button"><span class="pin"></span><span class="label">성수</span></button>
         <button class="hotspot hongdae" data-impact="hongdae" type="button"><span class="pin"></span><span class="label">홍대</span></button>
         <button class="hotspot jamsil" data-impact="jamsil" type="button"><span class="pin"></span><span class="label">잠실</span></button>
         <button class="hotspot ikseon" data-impact="ikseon" type="button"><span class="pin"></span><span class="label">익선동</span></button>
-        <div class="map-note"><strong>Click the Seoul Spots</strong>공연장에만 머무르지 않고, 팬의 하루가 서울 곳곳의 로컬 경험으로 확장됩니다.</div>
+        <div class="map-note"><strong>Click the Seoul Spots</strong>공연장에만 머무르지 않고, 에어비앤비 관광버스가 잇는 동선을 따라 팬의 하루가 서울 곳곳의 로컬 경험으로 확장됩니다.</div>
       </div>
       <div class="impact-bento-grid" aria-label="지역상생 효과 Bento 카드">
         <button class="bento-card featured active" data-impact="seongsu" type="button"><div class="bento-top"><span class="bento-place">📍 성수</span><span class="bento-icon">☕</span></div><div class="bento-number">+32%</div><h3 class="bento-title">성수 상권 방문 증가</h3><p class="bento-desc">공연 전후 팬들이 카페, 편집샵, 팝업스토어를 방문하며 숙박 이후 소비가 골목 상권으로 확장됩니다.</p><div class="bento-tags"><span>#CafeTour</span><span>#PopupStore</span><span>#LocalShop</span></div></button>
         <button class="bento-card" data-impact="hongdae" type="button"><div class="bento-top"><span class="bento-place">📍 홍대</span><span class="bento-icon">🎤</span></div><div class="bento-number">4.8★</div><h3 class="bento-title">팬 만족도 상승</h3><p class="bento-desc">공연 후 야간 맛집, 버스킹 거리, 굿즈 교환존으로 팬 경험을 이어갑니다.</p></button>
         <button class="bento-card" data-impact="jamsil" type="button"><div class="bento-top"><span class="bento-place">📍 잠실</span><span class="bento-icon">🗺️</span></div><div class="bento-number">3X</div><h3 class="bento-title">동선 분산 효과</h3><p class="bento-desc">공연장 주변 혼잡을 줄이고 숙소·카페·야경 명소로 이동을 분산합니다.</p></button>
         <button class="bento-card" data-impact="ikseon" type="button"><div class="bento-top"><span class="bento-place">📍 익선동</span><span class="bento-icon">🌙</span></div><div class="bento-number">24H</div><h3 class="bento-title">체류 경험 확장</h3><p class="bento-desc">다음 날 한옥 골목, 디저트 카페, 포토 스팟으로 서울의 기억을 완성합니다.</p></button>
-        <div class="impact-summary"><strong>Impact Story</strong>이 섹션은 단순한 수치가 아니라, K-POP 팬의 이동이 서울의 여러 지역으로 확장되는 과정을 보여주는 인터랙티브 포트폴리오 장면입니다.</div>
+        <div class="impact-summary"><strong>Impact Story</strong>이 섹션은 단순한 수치가 아니라, K-POP 팬의 이동이 에어비앤비 관광버스를 따라 서울의 여러 지역으로 확장되는 과정을 보여주는 인터랙티브 포트폴리오 장면입니다.</div>
       </div>
     </div>
   </section>
